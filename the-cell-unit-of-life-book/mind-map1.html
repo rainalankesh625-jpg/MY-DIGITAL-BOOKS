@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cells & Diseases – Mind Map 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ee;--card:#fff;--ink:#1c2230;--mute:#6a7283;--line:#dcd8cc;--onc:#fff;--c0:#2563b8;--c1:#c2334a;--c2:#12805c;--c3:#a85f08;--f:'Inter',system-ui,sans-serif;--h:'Fraunces',Georgia,serif}
+:root:not([data-theme=light]){}
+[data-theme=dark]{--bg:#0f131b;--card:#192030;--ink:#e8ecf4;--mute:#97a0b3;--line:#2b3447;--onc:#10141c;--c0:#6aa8ff;--c1:#ff7b8f;--c2:#3fd1a0;--c3:#f5b85a}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;height:100dvh;background:var(--bg);color:var(--ink);font-family:var(--f);padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+h1{font:700 18px var(--h);margin:0 8px 0 0}
+button,input{font:500 13px var(--f);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:7px 11px;cursor:pointer}
+button:hover{border-color:var(--ink)}button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+input{cursor:text;min-width:150px;flex:1;max-width:260px}
+#hc{font-size:12px;color:var(--mute)}
+#prog{display:flex;align-items:center;gap:10px;padding:6px 14px;font-size:12px;color:var(--mute)}
+#prog b{flex:1;height:6px;border-radius:9px;background:var(--line);overflow:hidden}#prog i{display:block;height:100%;width:0;background:var(--c2);transition:width .3s}
+main{flex:1;display:flex;min-height:0}
+#stage{position:relative;flex:1;min-width:0}
+svg{width:100%;height:100%;touch-action:none;display:block;cursor:grab}
+svg text{font-family:var(--f);font-weight:600}
+.m{visibility:hidden}
+.zoom{position:absolute;left:12px;bottom:12px;display:flex;flex-direction:column;gap:6px}
+.lk{fill:none;stroke:var(--c);stroke-width:2.2;stroke-linecap:round}.lk.dim{stroke-opacity:.1}
+.node{cursor:pointer;outline:none}.node .in{transition:opacity .25s}.node.dim .in{opacity:.17}
+.node rect{fill:var(--card);stroke:var(--c);stroke-width:2.2}
+.node text{fill:var(--ink)}
+.d0 rect{fill:var(--ink);stroke:var(--ink)}.d0 text{fill:var(--bg)}
+.d1 rect{fill:var(--c)}.d1 text{fill:var(--onc)}
+.node.sel rect{stroke-width:4.5;filter:drop-shadow(0 3px 7px rgba(0,0,0,.35))}
+.node.hit rect{stroke:#f2b400;stroke-width:4.5}
+.node:focus-visible rect{stroke:var(--ink);stroke-width:4;stroke-dasharray:6 3}
+.tg circle{fill:var(--bg);stroke:var(--c);stroke-width:2}.tg text{fill:var(--c)!important;font-size:14px;font-weight:700}
+.bd{display:none}.learned .bd{display:block}.bd circle{fill:#12805c}.bd text{fill:#fff!important;font-size:10px}
+#panel{width:330px;border-left:1px solid var(--line);background:var(--card);padding:16px;overflow:auto}
+#panel[hidden]{display:none}
+.cr{font-size:12px;color:var(--mute);margin-bottom:8px;display:flex;flex-wrap:wrap;gap:2px 4px}
+.cr button{border:0;background:none;padding:0;color:var(--mute);text-decoration:underline;font-size:12px}
+#panel h2{font:700 22px var(--h);margin:4px 0 8px;color:var(--c)}
+#panel p{line-height:1.55;font-size:14px;margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chips button{border-color:var(--c);color:var(--c);border-radius:99px}
+.act{display:flex;gap:6px;flex-wrap:wrap}
+@media(max-width:700px){#panel{position:fixed;left:0;right:0;bottom:0;height:44vh;width:auto;border:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.25);padding-bottom:calc(16px + env(safe-area-inset-bottom,0))}h1{font-size:15px}}
+</style></head>
+<body>
+<header>
+<h1>Cells &amp; Diseases</h1>
+<input id="q" type="search" placeholder="Search topics…" aria-label="Search"><span id="hc"></span>
+<button id="ea">Expand all</button><button id="ca">Collapse all</button><button id="ft">Fit view</button>
+<button id="fm" aria-pressed="false">Focus mode</button><button id="th" aria-label="Toggle theme">◐ Theme</button>
+</header>
+<div id="prog"><span id="pt"></span><b><i></i></b></div>
+<main>
+<div id="stage"><svg id="svg" role="tree" aria-label="Mind map"><g id="cam"><g id="links"></g><g id="nodes"></g></g></svg>
+<div class="zoom"><button id="zi" aria-label="Zoom in">＋</button><button id="zo" aria-label="Zoom out">－</button></div></div>
+<aside id="panel" hidden></aside>
+</main>
+<script>
+const DATA=["Cells & Diseases","Chapter 12: what happens when cellular control fails — cancer, stem cells and cell death.",[
+["12.1 Balance of Life","The body is a cooperative society of trillions of cells that divide, grow, specialize and die.",[
+ ["Cellular Homeostasis","Harmonious equilibrium of dividing, working and dying cells, relying on strict internal regulation."],
+ ["When Control Fails","Mutations disrupting checkpoints, or external stress, cause damage from local tissue degradation to aggressive diseases like cancer."],
+ ["Healing & Shaping","Stem cells regenerate tissue; apoptosis lets the body heal, defend itself and shape its own architecture."]]],
+["12.2 Cancer","A group of over a hundred diseases defined by uncontrolled cell division and proliferation.",[
+ ["Uncontrolled Division","Cells divide indefinitely and ignore signals telling them to stop."],
+ ["Normal Cell Cycle","Tightly managed by regulatory proteins, checkpoints and tumor-suppressing genes."],
+ ["Cause: Mutations","Accumulated genetic mutations override the control systems."],
+ ["Genetic Drivers","Two gene classes: growth accelerators and cellular brakes.",[
+  ["Proto-Oncogenes","Normal genes encouraging healthy growth and division.",[["Oncogenes","Mutated proto-oncogenes driving hyperactive, unregulated division — like a stuck accelerator pedal."]]],
+  ["Tumor Suppressor Genes","Cellular brakes: repair damaged DNA or trigger cell death (e.g., p53). When inactivated, brakes fail completely."]]],
+ ["Tumor Types","Tumors differ by whether they stay put or invade.",[
+  ["Benign Tumors","Abnormal cells remaining localized; no invasion or spread; usually surgically removable."],
+  ["Malignant Tumors","Invasive cancerous masses that break through normal tissue boundaries.",[["Metastasis","Travel via blood or lymphatic system to form secondary tumors in distant organs."]]]]]]],
+["12.3 Stem Cells","Unspecialized reserve cells: the raw material for growth, maintenance and tissue repair.",[
+ ["Defining Properties","Two features define a stem cell.",[
+  ["Self-Renewal","Divide repeatedly through mitosis while staying unspecialized."],
+  ["Potency","Ability to give rise to specialized functional cell types."]]],
+ ["Classification by Potency","Stem cells ranked by differentiation potential.",[
+  ["Totipotent","Forms every cell type plus placenta tissues (e.g., zygote in its first few divisions)."],
+  ["Pluripotent","Becomes almost any body cell, across the three germ layers (e.g., embryonic stem cells)."],
+  ["Multipotent","Limited to a related cell family (e.g., bone-marrow hematopoietic cells making red cells, white cells, platelets)."]]]]],
+["12.4 Cell Death","Programmed death is essential for sculpting tissues and purging damaged cells.",[
+ ["Apoptosis","Clean, highly regulated, genetically controlled cellular self-destruction (programmed cell death).",[
+  ["Purpose","Removes excess embryonic cells (finger webbing), virus-infected cells and pre-cancerous cells."],
+  ["Apoptosis Mechanism","Caspases dismantle proteins; cell shrinks, chromatin condenses, membrane forms blebs; macrophages recycle fragments, no inflammation."]]],
+ ["Necrosis","Unregulated, traumatic accidental death from acute injury, toxins, ischemia (lack of oxygen) or infection.",[
+  ["Necrosis Mechanism","Cell swells, plasma membrane ruptures, toxic digestive enzymes spill into surrounding space."],
+  ["Consequences","Severe inflammatory response that can harm adjacent healthy tissues."]]]]]
+]];
+const NS='http://www.w3.org/2000/svg',$=s=>document.querySelector(s);
+const svg=$('#svg'),cam=$('#cam'),LG=$('#links'),NG=$('#nodes'),P=$('#panel'),RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobile=()=>innerWidth<=700;
+const el=(t,a={})=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e};
+const nodes=[];
+function mk(a,d,p,ci){const n={id:nodes.length,label:a[0],detail:a[1],kids:[],depth:d,parent:p,ci,open:false,vis:false,x:0,y:0,o:0};nodes.push(n);(a[2]||[]).forEach((k,i)=>n.kids.push(mk(k,d+1,n,d==0?i:ci)));return n}
+const root=mk(DATA,0,null,0);root.open=true;
+let sel=null,Q='',hits=new Set(),focus=false,vis=[],leaving=[],colX=[],ROW=0,A=null;
+let L=new Set();try{L=new Set(JSON.parse(localStorage.getItem('mm-ch12')||'[]'))}catch(e){}
+const mt=el('text',{class:'m'});svg.appendChild(mt);
+const tw=(s,z)=>{mt.style.fontSize=z+'px';mt.textContent=s;return mt.getComputedTextLength()};
+function wrap(s,z,max){let o=[],c='';s.split(' ').forEach(x=>{const t=c?c+' '+x:x;if(c&&tw(t,z)>max){o.push(c);c=x}else c=t});o.push(c);return o}
+function metrics(){const mw=[];nodes.forEach(n=>{const z=n.depth?13:15;n.sz=z;n.lines=wrap(n.label,z,n.depth?150:170);n.w=Math.ceil(Math.max(...n.lines.map(l=>tw(l,z))))+32;n.h=n.lines.length*(z+4)+18;mw[n.depth]=Math.max(mw[n.depth]||0,n.w)});
+ let x=0;mw.forEach((w,d)=>{colX[d]=x;x+=w+72});ROW=Math.max(...nodes.map(n=>n.h))+16}
+function layout(refit){const old=vis,nv=[];let row=0;
+ (function p(n){nv.push(n);if(n.open&&n.kids.length){n.kids.forEach(p);n.ty=(n.kids[0].ty+n.kids[n.kids.length-1].ty)/2}else n.ty=row++*ROW;n.tx=colX[n.depth];n.to=1})(root);
+ const set=new Set(nv);
+ nv.forEach(n=>{if(!n.vis){n.x=n.parent?n.parent.x:0;n.y=n.parent?n.parent.y:0;n.o=0}n.vis=true});
+ const gone=old.filter(n=>!set.has(n));
+ gone.forEach(n=>{let a=n.parent;while(a&&!set.has(a))a=a.parent;n.tx=a.tx;n.ty=a.ty;n.to=0;n.vis=false});
+ leaving=leaving.filter(n=>!set.has(n)).concat(gone);vis=nv;if(refit)fitTarget();start()}
+let C={x:20,y:60,k:1},CT={...C},CS={...C};
+function fitTarget(){let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;vis.forEach(n=>{x1=Math.min(x1,n.tx);x2=Math.max(x2,n.tx+n.w+12);y1=Math.min(y1,n.ty-n.h/2);y2=Math.max(y2,n.ty+n.h/2)});
+ const r=svg.getBoundingClientRect(),k=Math.min(1.1,(r.width-50)/(x2-x1),(r.height-60)/(y2-y1));
+ CT={k,x:(r.width-(x2-x1)*k)/2-x1*k,y:(r.height-(y2-y1)*k)/2-y1*k}}
+function start(){const all=[...vis,...leaving];all.forEach(n=>{n.sx=n.x;n.sy=n.y;n.so=n.o});CS={...C};
+ const a=A={t:performance.now(),d:RM?0:420};
+ const f=now=>{if(A!==a)return;const t=a.d?Math.min(1,(now-a.t)/a.d):1,e=1-Math.pow(1-t,3);
+  all.forEach(n=>{n.x=n.sx+(n.tx-n.sx)*e;n.y=n.sy+(n.ty-n.sy)*e;n.o=n.so+(n.to-n.so)*e});
+  C={k:CS.k+(CT.k-CS.k)*e,x:CS.x+(CT.x-CS.x)*e,y:CS.y+(CT.y-CS.y)*e};draw();
+  if(t<1)requestAnimationFrame(f);else{leaving.forEach(n=>{n.g&&n.g.remove();n.l&&n.l.remove();n.g=n.l=null});leaving=[];A=null}};
+ f(a.t+(a.d?0:1e9))}
+function build(n){const col=n.depth?`var(--c${n.ci})`:'var(--ink)';
+ const g=el('g',{class:'node d'+Math.min(n.depth,2),tabindex:0,role:'treeitem','aria-label':n.label,style:'--c:'+col}),i=el('g',{class:'in'});
+ i.append(el('rect',{width:n.w,height:n.h,rx:12}));
+ const t=el('text',{'text-anchor':'middle','font-size':n.sz});
+ n.lines.forEach((l,k)=>{const s=el('tspan',{x:n.w/2,y:9+k*(n.sz+4)+(n.sz+4)/2+n.sz*.35});s.textContent=l;t.append(s)});i.append(t);
+ if(n.kids.length){const tg=el('g',{class:'tg'});tg.append(el('circle',{cx:n.w,cy:n.h/2,r:10}));n.tt=el('text',{x:n.w,y:n.h/2+5,'text-anchor':'middle'});tg.append(n.tt);i.append(tg)}
+ const b=el('g',{class:'bd'});b.append(el('circle',{cx:2,cy:2,r:8}));const c=el('text',{x:2,y:5.5,'text-anchor':'middle'});c.textContent='✓';b.append(c);i.append(b);
+ g.append(i);NG.append(g);n.g=g;
+ n.l=n.parent?el('path',{class:'lk',style:'--c:var(--c'+n.ci+')'}):null;n.l&&LG.append(n.l);
+ g.addEventListener('click',()=>{if(moved)return;select(n);toggle(n)});
+ g.addEventListener('keydown',e=>keyNav(e,n))}
+function draw(){cam.setAttribute('transform',`translate(${C.x},${C.y}) scale(${C.k})`);
+ [...vis,...leaving].forEach(n=>{if(!n.g)build(n);
+  n.g.setAttribute('transform',`translate(${n.x},${n.y-n.h/2})`);n.g.style.opacity=n.o;
+  if(n.l){const p=n.parent,x1=p.x+p.w,x2=n.x,m=(x1+x2)/2;n.l.setAttribute('d',`M${x1},${p.y}C${m},${p.y} ${m},${n.y} ${x2},${n.y}`);n.l.style.opacity=n.o*.8}});sty()}
+function sty(){const keep=new Set();if(focus&&sel){keep.add(sel);sel.kids.forEach(k=>keep.add(k));for(let a=sel.parent;a;a=a.parent)keep.add(a)}
+ [...vis,...leaving].forEach(n=>{if(!n.g)return;const dim=(Q&&!hits.has(n))||(focus&&sel&&!keep.has(n));
+  n.g.classList.toggle('dim',!!dim);n.g.classList.toggle('hit',hits.has(n));n.g.classList.toggle('sel',n===sel);n.g.classList.toggle('learned',L.has(n.id));
+  n.g.setAttribute('aria-expanded',n.kids.length?n.open:'');if(n.tt)n.tt.textContent=n.open?'−':'+';
+  n.l&&n.l.classList.toggle('dim',!!dim)});
+ $('#pt').textContent=L.size+'/'+(nodes.length-1)+' learned';$('#prog i').style.width=100*L.size/(nodes.length-1)+'%';
+ $('#hc').textContent=Q?hits.size+' match'+(hits.size==1?'':'es'):''}
+function toggle(n){if(!n.kids.length)return;n.open=!n.open;layout(false)}
+function select(n,center){sel=n;panel();sty();if(center)centerOn(n)}
+function centerOn(n){const r=svg.getBoundingClientRect();CT={k:C.k,x:r.width/2-(n.tx+n.w/2)*C.k,y:r.height*(mobile()?.3:.5)-n.ty*C.k};start()}
+function panel(){if(!sel){P.hidden=true;return}const n=sel,path=[];for(let a=n;a;a=a.parent)path.unshift(a);
+ P.hidden=false;P.style.setProperty('--c',n.depth?`var(--c${n.ci})`:'var(--ink)');
+ P.innerHTML=`<div class="cr">${path.map((a,i)=>(i?'<span>›</span>':'')+(a===n?`<span>${a.label}</span>`:`<button data-id="${a.id}">${a.label}</button>`)).join('')}</div>
+ <h2>${n.label}</h2><p>${n.detail}</p>${n.kids.length?`<div class="chips">${n.kids.map(k=>`<button data-id="${k.id}">${k.label}</button>`).join('')}</div>`:''}
+ <div class="act"><button id="ml" aria-pressed="${L.has(n.id)}">${L.has(n.id)?'✓ Learned':'Mark as learned'}</button><button id="pf" aria-pressed="${focus}">Focus mode</button><button id="px">Close</button></div>`;
+ P.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{const t=nodes[+b.dataset.id];if(t.parent&&!t.parent.open)t.parent.open=true;if(t.parent===n){n.open=true}layout(false);select(t,true)});
+ $('#ml').onclick=()=>{L.has(n.id)?L.delete(n.id):L.add(n.id);try{localStorage.setItem('mm-ch12',JSON.stringify([...L]))}catch(e){}panel();sty()};
+ $('#pf').onclick=()=>setFocus(!focus);$('#px').onclick=()=>{sel=null;panel();sty()}}
+function setFocus(v){focus=v;$('#fm').setAttribute('aria-pressed',v);const b=$('#pf');b&&b.setAttribute('aria-pressed',v);sty()}
+function keyNav(e,n){const k=e.key;let t=null;
+ if(k=='Enter'||k==' '){e.preventDefault();select(n);toggle(n)}
+ else if(k=='ArrowRight'){e.preventDefault();if(n.kids.length){if(!n.open){n.open=true;layout(false)}else t=n.kids[0]}}
+ else if(k=='ArrowLeft'){e.preventDefault();if(n.open&&n.depth){n.open=false;layout(false)}else t=n.parent}
+ else if(k=='ArrowDown'||k=='ArrowUp'){e.preventDefault();const s=vis.filter(m=>m.depth==n.depth).sort((a,b)=>a.ty-b.ty);t=s[s.indexOf(n)+(k=='ArrowDown'?1:-1)]}
+ if(t&&t.g){t.g.focus();select(t);const r=svg.getBoundingClientRect(),sx=C.x+t.tx*C.k,sy=C.y+t.ty*C.k;if(sx<0||sy<0||sx+t.w*C.k>r.width||sy>r.height)centerOn(t)}}
+$('#ea').onclick=()=>{nodes.forEach(n=>n.open=n.kids.length>0);layout(true)};
+$('#ca').onclick=()=>{nodes.forEach(n=>n.open=false);root.open=true;layout(true)};
+$('#ft').onclick=()=>{fitTarget();start()};
+$('#fm').onclick=()=>setFocus(!focus);
+$('#th').onclick=()=>{const d=document.documentElement.dataset.theme=='dark'?'light':'dark';document.documentElement.dataset.theme=d;try{localStorage.setItem('mm-theme',d)}catch(e){}};
+$('#q').oninput=e=>{Q=e.target.value.trim().toLowerCase();hits=new Set();
+ if(Q){nodes.forEach(n=>{if((n.label+' '+n.detail).toLowerCase().includes(Q))hits.add(n)});hits.forEach(n=>{for(let a=n.parent;a;a=a.parent)a.open=true})}
+ layout(!!Q);sty()};
+function zoomAt(f,cx,cy){const k=Math.min(2.5,Math.max(.25,C.k*f)),r=k/C.k;C={k,x:cx-(cx-C.x)*r,y:cy-(cy-C.y)*r};CT={...C};CS={...C};cam.setAttribute('transform',`translate(${C.x},${C.y}) scale(${C.k})`)}
+const cs=()=>{const r=svg.getBoundingClientRect();return[r.width/2,r.height/2]};
+$('#zi').onclick=()=>zoomAt(1.25,...cs());$('#zo').onclick=()=>zoomAt(.8,...cs());
+svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect();zoomAt(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top)},{passive:false});
+const ptr=new Map();let moved=false,pd=0;const dist=()=>{const [a,b]=[...ptr.values()];return Math.hypot(a.x-b.x,a.y-b.y)};
+svg.addEventListener('pointerdown',e=>{ptr.set(e.pointerId,{x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY});moved=false;if(ptr.size==2)pd=dist()});
+addEventListener('pointermove',e=>{const p=ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;
+ if(Math.hypot(e.clientX-p.sx,e.clientY-p.sy)>6)moved=true;
+ if(ptr.size==1){if(moved){C.x+=dx;C.y+=dy;CT={...C};CS={...C};cam.setAttribute('transform',`translate(${C.x},${C.y}) scale(${C.k})`)}p.x=e.clientX;p.y=e.clientY}
+ else if(ptr.size==2){p.x=e.clientX;p.y=e.clientY;const nd=dist(),[a,b]=[...ptr.values()],r=svg.getBoundingClientRect();moved=true;zoomAt(nd/pd,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top);pd=nd}});
+const up=e=>{ptr.delete(e.pointerId);setTimeout(()=>moved=false,0)};addEventListener('pointerup',up);addEventListener('pointercancel',up);
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{fitTarget();start()},200)});
+// Overlap self-test: returns number of intersecting visible node pairs / text overflows
+window.checkOverlap=()=>{let bad=0;const R=vis.map(n=>({n,x:n.tx-2,y:n.ty-n.h/2-2,w:n.w+24,h:n.h+4}));
+ for(let i=0;i<R.length;i++)for(let j=i+1;j<R.length;j++){const a=R[i],b=R[j];if(a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h)bad++}
+ vis.forEach(n=>{if(!n.g)return;const t=n.g.querySelector('text').getBBox();if(t.width>n.w-8||t.height>n.h)bad++});return bad};
+try{document.documentElement.dataset.theme=localStorage.getItem('mm-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}
+document.fonts.ready.then(()=>{metrics();layout(true);C={...CT};draw()});
+</script></body></html>

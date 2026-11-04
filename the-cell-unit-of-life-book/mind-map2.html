@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cellular Factory Floor – Mind Map 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f1e8;--ink:#1f2433;--mut:#6a7080;--panel:#fffdf7;--line:#b9b3a3;--root:#1f2433;--c0:#c2410c;--c1:#a21caf;--c2:#0f766e;--c3:#1d4ed8;--c4:#b91c1c;--c5:#4d7c0f;--sh:0 8px 28px rgba(30,30,40,.18);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=dark]{--bg:#12151d;--ink:#e8e9ef;--mut:#9aa1b3;--panel:#1b2030;--line:#454c60;--root:#e8e9ef;--c0:#fb923c;--c1:#e879f9;--c2:#2dd4bf;--c3:#60a5fa;--c4:#f87171;--c5:#a3e635;--sh:0 8px 28px rgba(0,0,0,.5)}
+html,body{height:100%;margin:0}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+h1{font:600 19px Fraunces,Georgia,serif;margin:0 10px 0 0}
+button,input{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+button{cursor:pointer}button:hover,button.on{border-color:var(--ink)}button.on{background:var(--ink);color:var(--bg)}
+input{min-width:150px;flex:1;max-width:240px}
+:focus-visible{outline:3px solid var(--c3);outline-offset:2px}
+#wrap{flex:1;position:relative;min-height:0}
+svg{width:100%;height:100%;touch-action:none;cursor:grab;display:block}
+.nt{font:600 13px Inter,system-ui,sans-serif}
+.node{cursor:pointer;transition:filter .2s}
+.node rect.b{fill:color-mix(in srgb,var(--c) 15%,var(--bg));stroke:var(--c);stroke-width:2}
+.node.root rect.b{fill:var(--root);stroke:var(--root)}
+.node text{fill:var(--ink);text-anchor:middle;pointer-events:none}.node.root text{fill:var(--bg)}
+.bd{fill:var(--c)}.bt{fill:#fff!important;font:600 11px Inter,sans-serif}
+.node.root .bd{fill:var(--bg)}.node.root .bt{fill:var(--root)!important}
+.node.dim,.link.dim{filter:opacity(.18)}
+.node.hit rect.b{stroke-width:4;filter:drop-shadow(0 0 6px var(--c))}
+.node.sel rect.b{stroke-width:4;stroke-dasharray:none}
+.node.learned rect.b{fill:color-mix(in srgb,var(--c) 38%,var(--bg))}
+.ck{fill:var(--c);font-size:13px;font-weight:700}
+.link{fill:none;stroke:var(--c);stroke-width:2;stroke-linecap:round}
+#prog{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--mut);font-size:12px}
+#bar{width:110px;height:8px;background:var(--line);border-radius:6px;overflow:hidden}#bar i{display:block;height:100%;width:0;background:var(--c2);transition:width .3s}
+#panel{position:absolute;right:12px;top:12px;width:300px;max-height:calc(100% - 24px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:12px;box-shadow:var(--sh);padding:14px;display:none}
+#panel.show{display:block}
+#bc{font-size:12px;color:var(--mut);margin-bottom:6px}#bc a{cursor:pointer;text-decoration:underline}
+#panel h2{font:600 19px Fraunces,Georgia,serif;margin:0 0 6px}
+.chip{display:inline-block;margin:4px 4px 0 0;padding:3px 10px;border-radius:99px;border:1.5px solid var(--cc);background:none;font-size:12px}
+#x{float:right;padding:0 8px}
+@media(max-width:700px){#panel{left:0;right:0;bottom:0;top:auto;width:auto;max-height:42%;border-radius:14px 14px 0 0}h1{font-size:16px}#bar{width:70px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header>
+<h1>Cellular Factory Floor</h1>
+<input id="q" type="search" placeholder="Search…" aria-label="Search">
+<button id="ea">Expand all</button><button id="ca">Collapse all</button><button id="fit">Fit view</button>
+<button id="zo" aria-label="Zoom out">−</button><button id="zi" aria-label="Zoom in">+</button>
+<button id="fm" aria-pressed="false">Focus</button><button id="th">Theme</button>
+<div id="prog"><div id="bar"><i></i></div><span id="pt">0/0 learned</span></div>
+</header>
+<div id="wrap">
+<svg id="s" role="tree" aria-label="Mind map"><g id="vp"><g id="lk"></g><g id="nd"></g></g>
+<text id="m" class="nt" style="visibility:hidden" x="0" y="-99"></text></svg>
+<aside id="panel" aria-live="polite"></aside>
+</div>
+<script>
+const DATA=["Chapter 9: Factory Floor","Chapter 9: the eukaryotic cell as a bustling, organized industrial city; its manufacturing, shipping and waste-management machinery.",[
+["9.1 Endomembrane System","Network of internal membranes and specialized structures that synthesizes, modifies, transports and recycles molecules essential for life.",[
+["Industrial City Analogy","Energy organelles handle large-scale fuel conversion; the endomembrane system handles manufacturing, shipping and recycling.",[]]]],
+["9.2 Ribosomes","Protein factories. Not membrane-bound, yet vital in all cells, prokaryotic and eukaryotic; translate mRNA into polypeptide chains.",[
+["Composition","Two subunits, large and small, made of ribosomal RNA (rRNA) and structural proteins.",[]],
+["Free Ribosomes","Float in the cytosol, making proteins that function locally within the cytoplasm.",[]],
+["Bound Ribosomes","Attached to rough ER's outer surface; make proteins for membranes, organelles like lysosomes, or export from the cell.",[]]]],
+["9.3 Endoplasmic Reticulum","Network of flattened sacs, tubules and channels (cisternae), continuous with the nuclear envelope; the cell's main manufacturing and transport highway.",[
+["Rough ER","Studded with millions of ribosomes, giving a bumpy look under the electron microscope.",[
+["Protein Synthesis & Folding","New polypeptide chains enter the ER lumen and fold into correct 3D shapes.",[]],
+["Protein Modification","Attaches carbohydrate groups to form glycoproteins.",[]],
+["Vesicle Formation","Packages finished proteins into transport vesicles bound for the Golgi apparatus.",[]]]],
+["Smooth ER","Lacks ribosomes, so it looks smooth and tubular.",[
+["Lipid Synthesis","Makes phospholipids, cholesterol and steroid hormones such as estrogen and testosterone.",[]],
+["Detoxification","Abundant in liver cells; enzymes detoxify drugs, alcohol and metabolic poisons.",[]],
+["Calcium Ion Storage","In muscle cells (sarcoplasmic reticulum) stores and releases Ca²⁺ ions to trigger muscle contraction.",[]]]]]],
+["9.4 Golgi Apparatus","The post office and packaging center: stacked, flattened membranous sacs (cisternae). Named after Italian physician Camillo Golgi.",[
+["Cis Face","The receiving side, near the ER; accepts incoming transport vesicles loaded with new proteins.",[]],
+["Trans Face","The shipping side, facing the plasma membrane; sorts, packages and dispatches molecules, including out via exocytosis.",[]],
+["Modification","Modifies carbohydrates on glycoproteins; adds chemical tags, such as phosphate groups, to direct proteins to correct locations.",[]],
+["Macromolecule Assembly","Synthesizes complex polysaccharides, such as pectin for plant cell walls.",[]]]],
+["9.5 Lysosomes","Recycling and waste plants: spherical vesicles packed with acid hydrolases. Mainly animal cells; plants have similar vacuolar compartments.",[
+["Acidic Interior","Enzymes work best at pH 4.5–5.0; membrane pumps H⁺ inward, protecting the cell from self-digestion if a lysosome leaks.",[]],
+["Intracellular Digestion","Fuse with food vacuoles to break down nutrients, bacteria or debris (phagocytosis).",[]],
+["Autophagy","Recycles damaged or worn-out organelles into basic building blocks the cell can reuse.",[]]]],
+["9.6 Vacuoles","Large membrane-bound vesicles for storage, structural support and osmoregulation; roles differ by organism.",[
+["Central Vacuole (Plants)","Massive, enclosed by the tonoplast; stores water, ions, pigments and defensive toxins, and generates turgor pressure.",[]],
+["Contractile Vacuoles","In freshwater protists like Paramecium; pump excess water out to prevent osmotic bursting.",[]],
+["Food Vacuoles","In protists and animals; formed by phagocytosis to store and digest food before lysosomal fusion.",[]]]]]];
+const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg',RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const svg=$('s'),vp=$('vp'),M=$('m'),N=[];let GX=60,GY=16,sel=null,focus=false,q='',T={x:0,y:0,k:1},L=new Set,raf=0;
+function mk(a,p,dep,ci){const n={id:N.length,l:a[0],d:a[1],p,dep,ci,open:false,cx:0,cy:0,op:0,tx:0,ty:0,to:0};N.push(n);n.k=a[2].map((x,i)=>mk(x,n,dep+1,dep==0?i:ci));return n}
+const root=mk(DATA,null,0,-1);root.open=true;
+try{L=new Set(JSON.parse(localStorage.getItem('cell9-learned')||'[]'))}catch(e){}
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+function wrap(s,max){const w=s.split(' '),o=[];let c='';for(const x of w){const t=c?c+' '+x:x;M.textContent=t;if(c&&M.getComputedTextLength()>max){o.push(c);c=x}else c=t}o.push(c);return o.slice(0,3)}
+function build(){N.forEach(n=>{n.lines=wrap(n.l,n.dep?150:170);let mw=0;n.lines.forEach(t=>{M.textContent=t;mw=Math.max(mw,M.getComputedTextLength())});n.w=Math.ceil(mw+32);n.h=n.lines.length*16+18;
+const col=n.ci<0?'var(--root)':`var(--c${n.ci})`;
+if(n.p)n.lkEl=el('path',{class:'link',style:`--c:${col}`},$('lk'));
+const g=n.g=el('g',{class:'node'+(n.ci<0?' root':''),style:`--c:${col}`,tabindex:0,role:'treeitem','aria-label':n.l},$('nd'));
+el('rect',{class:'b',width:n.w,height:n.h,rx:11},g);
+n.lines.forEach((t,i)=>{const x=el('text',{class:'nt',x:n.w/2,y:16+i*16+(n.h-18-n.lines.length*16)/2},g);x.textContent=t});
+n.ck=el('text',{class:'ck',x:8,y:n.h-5},g);
+if(n.k.length){el('circle',{class:'bd',cx:n.w,cy:n.h/2,r:10},g);n.bt=el('text',{class:'bt',x:n.w,y:n.h/2+4},g)}
+g.addEventListener('click',()=>{if(moved)return;select(n);toggle(n)});
+g.addEventListener('keydown',e=>key(e,n))})}
+function layout(){const vis=[],colW=[],X=[];(function w(n){vis.push(n);n.k.length&&n.open&&n.k.forEach(w)})(root);
+N.forEach(n=>n.vis=false);vis.forEach(n=>{n.vis=true;colW[n.dep]=Math.max(colW[n.dep]||0,n.w)});
+const H=Math.max(...vis.map(n=>n.h))+GY;let x=24;colW.forEach((w,i)=>{X[i]=x;x+=w+GX});let r=0;
+(function p(n){if(n.vis&&n.open&&n.k.length){n.k.forEach(p);n.ty=(n.k[0].ty+n.k[n.k.length-1].ty)/2}else if(n.vis)n.ty=24+r++*H;n.tx=X[n.dep]})(root);
+N.forEach(n=>{if(n.vis){n.to=1;return}let a=n.p;while(!a.vis)a=a.p;n.tx=a.tx;n.ty=a.ty;n.to=0});
+N.forEach(n=>{if(!n.inited){n.cx=n.tx;n.cy=n.ty;n.op=n.to;n.inited=1}
+if(n.bt)n.bt.textContent=n.open?'−':n.k.length})}
+function overlaps(){const v=N.filter(n=>n.vis);let c=0;for(let i=0;i<v.length;i++)for(let j=i+1;j<v.length;j++){const a=v[i],b=v[j];if(a.tx<b.tx+b.w&&b.tx<a.tx+a.w&&a.ty<b.ty+b.h&&b.ty<a.ty+a.h)c++}return c}
+function tick(){let busy=false;const f=RM?1:.2;
+for(const n of N){const dx=n.tx-n.cx,dy=n.ty-n.cy,dp=n.to-n.op;
+if(Math.abs(dx)>.3||Math.abs(dy)>.3||Math.abs(dp)>.02){busy=true;n.cx+=dx*f;n.cy+=dy*f;n.op+=dp*f}else{n.cx=n.tx;n.cy=n.ty;n.op=n.to}
+const hid=n.op<.03&&n.to==0;n.g.setAttribute('transform',`translate(${n.cx},${n.cy})`);n.g.style.opacity=n.op;n.g.style.visibility=hid?'hidden':'visible';
+if(n.p){const p=n.p,a=p.cx+p.w,b=p.cy+p.h/2,c=n.cx,d=n.cy+n.h/2,m=(c-a)/2;n.lkEl.setAttribute('d',`M${a},${b}C${a+m},${b} ${c-m},${d} ${c},${d}`);n.lkEl.style.opacity=n.op;n.lkEl.style.visibility=hid?'hidden':'visible'}}
+raf=busy?requestAnimationFrame(tick):0}
+function kick(){if(!raf)raf=requestAnimationFrame(tick)}
+function render(){layout();kick();paint()}
+function toggle(n){if(!n.k.length)return;n.open=!n.open;if(!n.open)N.forEach(x=>{for(let a=x.p;a;a=a.p)if(a===n)x.open=false});render()}
+function anc(n){const o=[];for(let a=n.p;a;a=a.p)o.unshift(a);return o}
+function desc(n,s){s.add(n);n.k.forEach(k=>desc(k,s));return s}
+function paint(){const keep=q?new Set():null,foc=focus&&sel?new Set([...anc(sel),...desc(sel,new Set())]):null;
+if(q)N.forEach(n=>{if(n.hit){keep.add(n);anc(n).forEach(a=>keep.add(a))}});
+N.forEach(n=>{const dim=(keep&&!keep.has(n))||(foc&&!foc.has(n));n.g.classList.toggle('dim',!!dim);n.g.classList.toggle('hit',!!(q&&n.hit));n.g.classList.toggle('sel',n===sel);n.g.classList.toggle('learned',L.has(n.id));n.ck.textContent=L.has(n.id)?'✓':'';
+n.g.setAttribute('aria-expanded',n.k.length?n.open:'');if(n.lkEl)n.lkEl.classList.toggle('dim',!!dim)});
+const t=N.length-1,l=[...L].filter(i=>i>0).length;$('pt').textContent=l+'/'+t+' learned';document.querySelector('#bar i').style.width=(100*l/t)+'%'}
+function select(n){sel=n;const P=$('panel'),col=n.ci<0?'var(--root)':`var(--c${n.ci})`;P.style.setProperty('--c',col);P.className='show';
+P.innerHTML='<button id="x" aria-label="Close">×</button><div id="bc"></div><h2></h2><p></p><div id="ch"></div><p><button id="lr"></button></p>';
+const bc=P.querySelector('#bc');anc(n).concat(n).forEach((a,i,r)=>{const s=document.createElement(i<r.length-1?'a':'span');s.textContent=a.l;if(a!==n)s.onclick=()=>select(a);bc.appendChild(s);if(i<r.length-1)bc.append(' › ')});
+P.querySelector('h2').textContent=n.l;P.querySelector('p').textContent=n.d;
+n.k.forEach(k=>{const b=document.createElement('button');b.className='chip';b.style.setProperty('--cc',n.ci<0?`var(--c${k.ci})`:col);b.textContent=k.l;b.onclick=()=>{n.open=true;render();select(k)};$('ch').appendChild(b)});
+const lr=$('lr');const u=()=>lr.textContent=L.has(n.id)?'✓ Learned (undo)':'Mark as learned';u();
+lr.onclick=()=>{L.has(n.id)?L.delete(n.id):L.add(n.id);try{localStorage.setItem('cell9-learned',JSON.stringify([...L]))}catch(e){}u();paint()};
+$('x').onclick=()=>{sel=null;P.className='';paint()};paint()}
+function key(e,n){const v=N.filter(x=>x.vis);let t=null;
+if(e.key=='Enter'||e.key==' '){e.preventDefault();select(n);toggle(n);return}
+if(e.key=='ArrowRight'){if(n.k.length){if(!n.open){n.open=true;render()}t=n.k[0]}}
+else if(e.key=='ArrowLeft')t=n.p;
+else if(e.key=='ArrowDown'||e.key=='ArrowUp'){const s=v.filter(x=>x.dep==n.dep).sort((a,b)=>a.ty-b.ty),i=s.indexOf(n)+(e.key=='ArrowDown'?1:-1);t=s[i]}
+if(t){e.preventDefault();t.g.focus();select(t)}}
+function apply(){vp.setAttribute('transform',`translate(${T.x},${T.y}) scale(${T.k})`)}
+function fit(){const v=N.filter(n=>n.vis);let bw=Math.max(...v.map(n=>n.tx+n.w+12)),bh=Math.max(...v.map(n=>n.ty+n.h))+24;const W=svg.clientWidth,H=svg.clientHeight;
+T.k=Math.min(W/bw,H/bh,1.3);T.x=(W-bw*T.k)/2;T.y=(H-bh*T.k)/2;apply()}
+function zoomAt(cx,cy,f){const r=svg.getBoundingClientRect(),x=cx-r.left,y=cy-r.top,k=Math.min(3,Math.max(.25,T.k*f)),g=k/T.k;T.x=x-(x-T.x)*g;T.y=y-(y-T.y)*g;T.k=k;apply()}
+const ps=new Map();let moved=false,acc=0,pd=0;const dist=()=>{const a=[...ps.values()];return Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)};
+svg.addEventListener('pointerdown',e=>{if(!ps.size){moved=false;acc=0}ps.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ps.size==2)pd=dist()});
+svg.addEventListener('pointermove',e=>{const p=ps.get(e.pointerId);if(!p)return;const ox=p.x,oy=p.y;p.x=e.clientX;p.y=e.clientY;
+if(ps.size==1){acc+=Math.abs(p.x-ox)+Math.abs(p.y-oy);if(acc>6){moved=true;T.x+=p.x-ox;T.y+=p.y-oy;apply()}}
+else if(ps.size==2){moved=true;const a=[...ps.values()],d=dist();zoomAt((a[0].x+a[1].x)/2,(a[0].y+a[1].y)/2,d/pd);pd=d}});
+['pointerup','pointercancel','pointerleave'].forEach(t=>svg.addEventListener(t,e=>{ps.delete(e.pointerId);pd=0}));
+svg.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.12:.89)},{passive:false});
+$('zi').onclick=()=>{const r=svg.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,1.25)};
+$('zo').onclick=()=>{const r=svg.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,.8)};
+$('fit').onclick=fit;
+$('ea').onclick=()=>{N.forEach(n=>n.open=!!n.k.length);GY=16;layout();let g=0;while(overlaps()&&g++<6){GY+=8;layout()}console.log('overlaps:',overlaps());kick();paint();fit()};
+$('ca').onclick=()=>{N.forEach(n=>n.open=false);root.open=true;render();fit()};
+$('fm').onclick=e=>{focus=!focus;e.target.classList.toggle('on',focus);e.target.setAttribute('aria-pressed',focus);paint()};
+$('th').onclick=()=>{const r=document.documentElement;r.dataset.theme=r.dataset.theme=='dark'?'light':'dark'};
+$('q').oninput=e=>{q=e.target.value.trim().toLowerCase();N.forEach(n=>n.hit=!!q&&(n.l+' '+n.d).toLowerCase().includes(q));
+if(q)N.forEach(n=>{if(n.hit)anc(n).forEach(a=>a.open=true)});render()};
+addEventListener('resize',fit);
+if(matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.dataset.theme='dark';
+(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>{build();render();fit()});
+</script></body></html>
